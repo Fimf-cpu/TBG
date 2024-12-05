@@ -1,0 +1,80 @@
+#include<iostream>
+using namespace std;
+
+
+int main() {
+	srand(time(NULL));
+	int room = 1;
+	string answer = "cat";
+	int worker1 = 1;
+	int playerHP = 20;
+	string invoentory[5];
+
+	while (playerHP != 0 or answer != "quit") {
+		switch (room) {
+		case 1:
+			cout << "you awake in your cell, the lights are off, the door is open.[you can go south]" << endl;
+			cin >> answer;
+			if (answer == "south")
+				room = 2;
+			break;
+
+		case 2:
+			cout << "steping from your cell, you find everyone is gone[west, or east]" << endl;
+			cin >> answer;
+			if (answer == "west")
+				room = 3;
+			if (answer == "east")
+				room = 4;
+			break;
+
+		case 3: // too dark
+			cout << "you come to a small hallway, a slightly rased shuter below a sign reading \" warden's offse\", it is too dark to see past it. [west, or east]" << endl;
+			cin >> answer;
+			if (answer == "west")
+				room = 11;
+			if (answer == "east")
+				room = 2;
+			break;
+
+		case 4:
+			cout << "a sucrity chekpoint, the way forword is seald, screens show \"lockdown in effect\", a panal behind a shelf takes your eye.[south, or west]" << endl;
+			if (worker1 == 1)
+				cout << "you hear faint clicking" << endl;
+			if (worker1 == 2)
+				cout << "the thing follows you, [you can hide]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 5;
+			if (answer == "west")
+				room = 2;
+			if (answer == "hide" && worker1 == 2) {
+				cout << "you duck under a table,as it emerges from the hall the clicking of secent one is heard, and the fist one pulls up in to a vent" << endl;
+				worker1 = 0;
+			}
+			break;
+
+		case 5:
+			cout << "you enter a long tight hall [south, or north]" << endl;
+			if (worker1 == 1)
+				cout << "you see small glowing white lights" << endl;
+			cin >> answer;
+			
+			if (answer == "south" && worker1 == 1) {
+				cout << "without the abliaty to see you walk to the lights, as you aproch the lights speed to you, you feel a sharp pain in you sides as you get thrown to the floor, eveything fades to black." << endl;
+				playerHP = 0; // game over
+			}
+			if (answer == "south" && worker1 == 0)
+				room = 6;
+			if (answer == "north" && worker1 == 1) {
+				room = 4;
+				worker1 = 2;
+			}
+			if (answer == "north" && worker1 == 0)
+				room = 4;
+			break;
+		}
+	}
+	cout << "GAME OVER" << endl;
+}
