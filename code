@@ -1,16 +1,26 @@
 #include<iostream>
 using namespace std;
+// functions dec
+void menu();
+int monster();
+void battle();
+void dayeater();
+//globle
+int room = 1;
+string answer = "cat";
+int playerHP = 20;
+string inventory[10];
 
 
 int main() {
 	srand(time(NULL));
-	int room = 1;
-	string answer = "cat";
 	int worker1 = 1;
-	int playerHP = 20;
-	string invoentory[5];
-
-	while (playerHP != 0 or answer != "quit") {
+	bool wall1 = 0;
+	int bomb = 0;
+	// loop
+	while (playerHP != 0 || answer != "quit") {
+		if (answer == "menu")
+			menu();
 		switch (room) {
 		case 1:
 			cout << "you awake in your cell, the lights are off, the door is open.[you can go south]" << endl;
@@ -29,10 +39,16 @@ int main() {
 			break;
 
 		case 3: // too dark
-			cout << "you come to a small hallway, a slightly rased shuter below a sign reading \" warden's offse\", it is too dark to see past it. [west, or east]" << endl;
+			cout << "you come to a small hallway, a slightly rased shuter below a sign reading \" warden's offce\",[west, or east]" << endl;
+			if (inventory[0] == "flashlight")
+				cout << "you shine your light under you see the ant flee from the light" << endl;
+			else
+				cout << "it is too dark to see past it, you hear clicking from the other side" << endl;
 			cin >> answer;
-			if (answer == "west")
-				room = 11;
+			if (answer == "west" && inventory[0] == "flashlight")
+				room = 31;
+			if (answer == "west" && inventory[0] != "flashlight")
+				playerHP = 0;
 			if (answer == "east")
 				room = 2;
 			break;
@@ -60,10 +76,10 @@ int main() {
 			if (worker1 == 1)
 				cout << "you see small glowing white lights" << endl;
 			cin >> answer;
-			
+
 			if (answer == "south" && worker1 == 1) {
 				cout << "without the abliaty to see you walk to the lights, as you aproch the lights speed to you, you feel a sharp pain in you sides as you get thrown to the floor, eveything fades to black." << endl;
-				playerHP = 0; // game over
+				playerHP = 0;
 			}
 			if (answer == "south" && worker1 == 0)
 				room = 6;
@@ -74,7 +90,518 @@ int main() {
 			if (answer == "north" && worker1 == 0)
 				room = 4;
 			break;
+		case 6:
+			cout << "the tunnal opens to a small room with many shelves covered in wires, junk, and tools.[west, or north]" << endl;
+			if (inventory[0] != "flashlight" && inventory[1] != "baton") {
+				cout << "two things do catch your intrest, a flashlight, and a shock baton, you take both" << endl;
+				inventory[0] = "flashlight";
+				inventory[1] = "baton";
+			}
+			cin >> answer;
+
+			if (answer == "north")
+				room = 5;
+			if (answer == "west")
+				room = 7;
+			break;
+		case 7:
+			battle();
+			cout << "a large lab space no ones here anymore, lose papers are sactered on the floor, PCs are still on some still loged in [west, east, read]" << endl;
+			cin >> answer;
+
+			if (answer == "east")
+				room = 6;
+			if (answer == "west")
+				room = 8;
+			if (answer == "read") {
+				cout << "you look at one of the PCs one report peaks you intrest." << endl;
+				cout << "DARK BLOOD ANTS" << endl;
+				cout << "extreamly hostle, parasitc, APEX prededer" << endl;
+				cout << "dicover on [REDACTED] in [REDACTED] zone" << endl;
+				cout << "a speases of highly colabtive ants, often seen forming constructs vagely resembaling humnoid shape of sevrale types or infecting any person, animal, or [REDACTED]." << endl;
+				cout << "Dark Blood Ants also burn and die when exposed to infa-red light, and have an extream advertion to light in genaral, the reason for this is still unknown" << endl;
+				cout << "the size and color of Dark Blood Ants varys heavly baced of roll in the coalany, the workers are pure black and only 5~6 MM in langth and follow orders from alates to make constructs around the alate." << endl;
+				cout << "The alates functon as sub-commanders of a colany before machering, they are Dark red in color, and have much larger mandabels evolded to sever spine and hijack the nervosystem, the range 0.7~1.2 M in langth." << endl;
+				cout << "the Queens are [REDACTED]" << endl;
+				cout << "refer to DBA report-068 of a list of constructs" << endl;
+				cout << "everything past that is redacted" << endl;
+			}
+			break;
+		case 8:
+			cout << "you walk though a door labed \"Dr. sparky, head resercher\" it opens to small room with a desk in the middle, coverd in paper, the coputer is broken parts are scatered everywhere,[east, wall, desk]" << endl;
+			if (wall1 == 0)
+				cout << "you see small slit on the wall" << endl;
+			else if (wall1 == 1)
+				cout << "The secreat door is open [North]" << endl;
+			cin >> answer;
+
+			if (answer == "north" && wall1 == 0) {
+				cout << "you slam your head in to the wall, hard.(you lost 2 HP)" << endl;
+				playerHP -= 2;
+			}
+			if (answer == "north" && wall1 == 1)
+				room = 9;
+			if (answer == "east")
+				room = 7;
+			if (answer == "desk") {
+				cout << "you look though the desk and found a first aid kit and a tiny key" << endl;
+				inventory[2] = "aidkit";
+				inventory[4] = "key1";
+			}
+			if (answer == "wall" && inventory[4] != "key1")
+				cout << "you inspect the wall and find a keyhole, but you don't have the key" << endl;
+			else if (answer == "wall" && inventory[4] == "key1") {
+				cout << "you unlock the hiden door" << endl;
+				wall1 = 1;
+			}
+			
+			break;
+		case 9:
+			cout << "the hiden path is dark, the air is stale, heavy, and cold[west, south]" << endl;
+			cin >> answer;
+			
+			if (answer == "west")
+				room = 10;
+			else if (answer == "south")
+				room = 9;
+			break;
+		case 10:
+			cout << "the path contues, but some thing feals off[west, east]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 11;
+			else
+				room = 11;
+			break;
+		case 11:
+			cout << "as you move, the floor colapses under you, you fall and land in dark and cramped tunle, the clicking is deffening here, a milleon eyes are on you now, theres no going back[south]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 12;
+			break;
+		case 12:
+			if (bomb == 0)
+				cout << "the tunnles contues[west, south, east]" << endl;
+			else if (bomb == 1)
+				cout << "the bombs set, your at a safe distans[detonate]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 17;
+			else if (answer == "south")
+				room = 13;
+			else if (answer == "east")
+				room = 26;
+			else if (answer == "detonate") {
+				cout << "it goes off, the tunnle shakes, looking around you hundreds of eyes appear in the dark, RUN [east]" << endl;
+				bomb = 2;
+			}
+			else if (answer != "east" && bomb == 2) {
+				cout << "the hord rips in to you" << endl;
+				playerHP = 0;
+			}
+			break;
+		case 13:
+			cout << "the tunnles contues[south, north]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 14;
+			else if (answer == "north")
+				room = 12;
+			break;
+		case 14:
+			cout << "the tunnles contues[west, east, north]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 21;
+			else if (answer == "east")
+				room = 15;
+			else if (answer == "north")
+				room = 13;
+			break;
+		case 15:
+			battle();
+			cout << "the tunnel bightens ahead of you, and you see hole in the wall[west, south]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 16;
+			else if (answer == "west")
+				room = 14;
+			break;
+		case 16:
+			cout << "stepping from the hole you find your self in an armory, it seams picked clean, but a case and a locker draws your eye[north, locker, case]" << endl;
+			cin >> answer;
+
+			if (answer == "north")
+				room = 15;
+			else if (answer == "locker") {
+				cout << "you open a locker, theres a left behind vest, on the under side thers some simboles you don't understand, you put it on any way." << endl;
+				inventory[3] = "vest";
+				playerHP += 30;
+			}
+			else if (answer == "case" && inventory[5] != "casekey")
+				cout << "you inspect the case to find a keyhole, and you don't have the key" << endl;
+			else if (answer == "case" && inventory[5] == "casekey") {
+				cout << "you open the case" << endl;
+				cout << "inside is a gantlet with symboles engraved all over" << endl;
+				cout << "engraved on the lid of the case \"For those that are bound to the earth, you may not be able to asend, but you can still serve your god\"" << endl;
+				cout << "a few secents after putting it on, it burst in to a pure black flame, where your hand is a purple star like light" << endl;
+				cout << "you feal stronger" << endl;
+				inventory[1] = "fist";
+			}
+			break;
+		case 17:
+			cout << "the tunnles contues[west, east]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 18;
+			else if (answer == "east")
+				room = 12;
+			break;
+		case 18:
+			battle();
+			cout << "the tunnles contues[south, east]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 19;
+			else if (answer == "east")
+				room = 17;
+			break;
+		case 19:
+			cout << "the tunnles contues[west, south, north]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 23;
+			else if (answer == "south")
+				room = 20;
+			else if (answer == "north")
+				room = 18;
+			break;
+		case 20:
+			battle();
+			cout << "the tunnles contues, but you see a small hole in the wall, you can probaly fit[south, east, north]" << endl;
+			cin >> answer;
+
+			if (answer == "south")
+				room = 22;
+			else if (answer == "east")
+				room = 21;
+			else if (answer == "north")
+				room = 19;
+			break;
+		case 21:
+			cout << "the tunnles contues[west, east]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 20;
+			else if (answer == "east")
+				room = 14;
+			break;
+		case 22:
+			cout << "a tight fit, but you see a explosive charge [north,take]" << endl;
+			cin >> answer;
+
+			if (answer == "north")
+				room = 20;
+			else if (answer == "take") {
+				cout << "you just bearly reach it" << endl;
+				inventory[7] = "charge";
+			}
+			break;
+		case 23:
+			cout << "the tunnle open in to lobby, a sign on the wall says HR[west, east]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 24;
+			else if (answer == "east")
+				room = 19;
+			break;
+		case 24:
+			battle();
+			cout << "you walk to the secutary's desk, a door next to it just labled \"MANIGER\" and it's the only door in here, a small glint takes your eye.[south ,east, glint]" << endl;
+			cin >> answer;
+
+			if (answer == "east")
+				room = 23;
+			else if (answer == "glint") {
+				cout << "it is a tiny key,you grab it" << endl;
+				inventory[6] = "casekey";
+			}
+			else if (answer == "south" && inventory[1] != "fist")
+				cout << "you try to open the door, it's stuck, you can't break in by hand alone." << endl;
+			else if (answer == "south" && inventory[1] == "fist") {
+				cout << "you punch the door clean off the hindges opening the way" << endl;
+				room = 25;
+			}
+			break;
+		case 25:
+			cout << "it opens in to small office, the smell of death asalts your nose, the desk and the the floor neer it are covered in dark red, above it a vent with more red around it, on the desk there is a detonator[take, north]" << endl;
+			cin >> answer;
+
+			if (answer == "take") {
+				cout << "you pick up the detonator" << endl;
+				inventory[8] = "kaboom";
+			}
+			else if (answer == "north")
+				room = 24;
+		case 26:
+			if (bomb == 0 || bomb == 1)
+				cout << "the tunnles contues but the way forword is blocked by rocks, somthing could probaly blow it open,[west, bomb]" << endl;
+			else
+				cout << "RUN [north]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 12;
+			else if (answer == "bomb" && inventory[7] == "charge") {
+				cout << "you plant the bomb, ready to blow[detonate]" << endl;
+				bomb = 1;
+				inventory[7] = " ";
+			}
+			else if (answer == "bomb" && inventory[7] != "charge") {
+				cout << "you don't have it" << endl;
+			}
+			else if (answer == "bomb" && bomb == 1) {
+				cout << "as you click the detonator down three feet from the exsplosive, you think that this was not your best idea" << endl;
+				playerHP = 0;
+			}
+			else if (answer == "north" && bomb == 2)
+				room = 27;
+			else if (answer != "north" && bomb == 2) {
+				cout << "the hord rips in to you" << endl;
+				playerHP = 0;
+			}
+			break;
+		case 27:
+			cout << "keep running[north]" << endl;
+			cin >> answer;
+
+			if (answer == "north")
+				room = 28;
+			else {
+				cout << "the hord rips in to you" << endl;
+				playerHP = 0;
+			}
+			break;
+		case 28:
+			cout << "a fant light is at the end of the tunnle, keep moving[west]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 29;
+			else {
+				cout << "the hord rips in to you" << endl;
+				playerHP = 0;
+			}
+			break;
+		case 29:
+			cout << "almost there [west]" << endl;
+			cin >> answer;
+
+			if (answer == "west")
+				room = 30;
+			else {
+				cout << "the hord rips in to you" << endl;
+				playerHP = 0;
+			}
+			break;
+		case 30:
+			cout << "you make it to the light, it's a chamber with a hole in the cealing, you see the sun for the first time in years" << endl;
+			cout << "your snapped back to the problem at hand by the clicking of the ants, but then somthing new, stomping large, heavy, stomping" << endl;
+			cout << "you turn around" << endl;
+			cout << "from the darkness an upsidown skull, two gleaming lights hover above, it watches you for a secent," << endl;
+
+			Dayeater();
 		}
 	}
 	cout << "GAME OVER" << endl;
+}
+//functions def
+void menu() {
+	cout << "_______________________________" << endl;
+	cout << "|PAUSE                        |" << endl;
+	cout << "|inventory                    |" << endl;
+	cout << "|backstory                    |" << endl;
+	cout << "|quit                         |" << endl;
+	cout << "-------------------------------" << endl;
+	cin >> answer;
+	if (answer == "inventory") {
+		cout << "you have";
+		for (int i = 0; i < 5; i++) {
+			cout << inventory[i] << "|";
+		}
+		cout << "and your helth is " << playerHP << endl;
+	}
+	else if (answer == "backstory")
+		cout << "WIP" << endl;
+	else
+		cout << "returned" << endl << endl;
+	
+
+}
+int monster() {
+	int num = rand() % 100+1;
+
+	if (num < 30) { // 30%
+		return 0;//nothing
+	}
+	else if (num < 80) { // 50% 
+		return 1;//worker
+	}
+	else if (num < 95) { // 15%
+		return 2;//drone
+	}
+	else {// 5%
+		return 3;//soldier
+	}
+}
+void battle() {
+	int monsterHP = 0;
+	int monsterAP = 0;
+	int type = monster();
+	int playerAP;
+	
+	if (inventory[1] == "baton")
+		playerAP = rand() % 6 + 1;
+	else if (inventory[1] == "fist")
+		playerAP = rand() % 10 + 1;
+
+	if (type == 0)
+		cout << "the clicking remans disitant" << endl;
+	else if (type >= 1)
+		cout << "the clicking grows loud" << endl;
+		cout << "______________________________________________" << endl;
+		if (type == 1) {
+			cout << "a small thin frame stand before you, a distinct crest and light blink up to it's head, the worker readys to attack" << endl;
+			monsterHP = 5;
+			monsterAP = rand() % 2 + 1;
+		}
+		else if (type == 2) {
+			cout << "a mult-limbed Drone, bolts out at you" << endl;
+			monsterHP = 10;
+			monsterAP = rand() % 3 + 1;
+		}
+		else if (type == 3) {
+			cout << "A large, bulky shape, mantis like claws lashout at you, the soldier stands strong" << endl;
+			monsterHP = 15;
+			monsterAP = rand() % 5 + 1;
+		}
+	while (playerHP > 0 && monsterHP > 0) {// battle 
+		//player
+		cout << "your turn [attack, guard, heal]" << endl;
+		cin >> answer;
+		if (answer == "attack") {
+			cout << "you strike" << endl;
+			monsterHP -= playerAP;
+		}
+		else if (answer == "heal") {
+			if (inventory[2] == "aidkit") {
+				cout << "you used part of first aid kit" << endl;
+				cout << "you feal better" << endl;
+				playerHP += 15;
+			}
+			else {
+				cout << "WITH WHAT" << endl;
+			}
+
+		}
+		// ANT
+		if (answer != "guard")
+			playerHP -= monsterAP;
+		else if (answer == "guard") {
+			cout << "you brace for an attack" << endl;
+			playerHP -= (monsterAP -= rand() % 5 + 1);
+		}
+		if (type == 1)
+			cout << "The worker claws at you" << endl;
+		else if (type == 2)
+			cout << "The drone slams in to you" << endl;
+		else if (type == 3)
+			cout << "The soldier brings it's claws down on you" << endl;
+		// death
+		if (playerHP <= 0 && type == 1)
+			cout << "you fall the worker looms over you, then drags you in to the darkness" << endl;
+		if (playerHP <= 0 && type == 2)
+			cout << "The drone picks you up, your too weak to fight it, it brings to it's jaw and bites" << endl;
+		if (playerHP <= 0 && type == 3)
+			cout << "The soldier's claw slams right though you, it slams you agenst the floor untell your motionless" << endl;
+		if (monsterHP <= 0)
+			cout << "the constuct falls and dimantals, leaving the body of a vary large ant" << endl;
+	
+	}
+}
+void Dayeater() {
+	int DayeaterHP = 100;
+	int DayeaterAP;
+	int DayeaterATTACK;
+	int playerAP;
+
+	cout << "the monster walks in to the light, unlike th others it is unfased" << endl;
+	cout << "it towers over you, even on all fours, it's front legs are masive and tipped in spikes insted of hands, bits of the Host's skelton pokes from it's dark gray \"skin\"," << endl;
+	cout << "THIS IS THE END, the dayeater stand ahead" << endl;
+
+
+	while (playerHP > 0 && DayeaterHP > 0) {// battle 
+		//player
+		cout << "your turn [attack, guard, heal]" << endl;
+		cin >> answer;
+		if (answer == "attack") {
+			cout << "you strike" << endl;
+			DayeaterHP -= playerAP;
+		}
+		else if (answer == "heal") {
+			if (inventory[2] == "aidkit") {
+				cout << "you used part of first aid kit" << endl;
+				cout << "you feal better" << endl;
+				playerHP += 15;
+			}
+			else {
+				cout << "WITH WHAT" << endl;
+			}
+
+		}
+		// ANT
+		int num = rand() % 25 + 1;
+		if (num < 10) {
+			DayeaterATTACK = 1;
+			DayeaterAP = rand() % 6 + 1;
+		}
+		else if (num < 20) {
+			DayeaterATTACK = 2;
+			DayeaterAP = rand() % 10 + 1;
+		}
+		else {
+			DayeaterATTACK = 3;
+			DayeaterAP = rand() % 20 + 1;
+		}
+
+		if (answer != "guard")
+			playerHP -= DayeaterAP;
+		else if (answer == "guard") {
+			cout << "you brace for an attack" << endl;
+			playerHP -= (DayeaterAP -= rand() % 5 + 1);
+		}
+
+		if (DayeaterATTACK == 1)
+			cout << "The dayeater swings it's front leg at you" << endl;
+		else if (DayeaterATTACK == 2)
+			cout << "The dayeater slams a leg down at you" << endl;
+		else if (DayeaterATTACK == 3)
+			cout << "The dayeater rears up and brings both front legs down on you" << endl;
+
+		if (playerHP <= 0)
+			cout << "the dayeater takes you to the groud, it blocks the light as it looms over you with it's front legs above, then brings them down" << endl;
+		if (DayeaterHP <= 0)
+			cout << "the dayeater colapses, it's armor broken, the light burning the ants away" << endl;
+	}
 }
