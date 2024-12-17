@@ -1,15 +1,17 @@
 #include<iostream>
+#include<Windows.h>
 using namespace std;
 // functions dec
 void menu();
 int monster();
 void battle();
-void dayeater();
+void Dayeater();
 //globle
 int room = 1;
 string answer = "cat";
 int playerHP = 20;
 string inventory[10];
+bool win;
 
 
 int main() {
@@ -17,8 +19,9 @@ int main() {
 	int worker1 = 1;
 	bool wall1 = 0;
 	int bomb = 0;
+	bool BOSS = 0;
 	// loop
-	while (playerHP != 0 || answer != "quit") {
+	while (playerHP >= 0 || answer != "quit" || win == 1) {
 		if (answer == "menu")
 			menu();
 		switch (room) {
@@ -30,7 +33,10 @@ int main() {
 			break;
 
 		case 2:
-			cout << "steping from your cell, you find everyone is gone[west, or east]" << endl;
+			if (BOSS == 0)
+				cout << "steping from your cell, you find everyone is gone[west, or east]" << endl;
+			else if (BOSS == 1)
+				cout << " as you walk past your cell you remeaber all the years lost, but you press on [west]" << endl;
 			cin >> answer;
 			if (answer == "west")
 				room = 3;
@@ -39,7 +45,7 @@ int main() {
 			break;
 
 		case 3: // too dark
-			cout << "you come to a small hallway, a slightly rased shuter below a sign reading \" warden's offce\",[west, or east]" << endl;
+			cout << "you come to a small hallway, a slightly rased shuter below a sign reading \" warden's office\",[west, or east]" << endl;
 			if (inventory[0] == "flashlight")
 				cout << "you shine your light under you see the ant flee from the light" << endl;
 			else
@@ -54,7 +60,10 @@ int main() {
 			break;
 
 		case 4:
-			cout << "a sucrity chekpoint, the way forword is seald, screens show \"lockdown in effect\", a panal behind a shelf takes your eye.[south, or west]" << endl;
+			if (BOSS == 0)
+				cout << "a security checkpoint, the way forword is seald, screens glow \"lockdown in effect\", a panel behind a shelf takes your eye.[south, or west]" << endl;
+			else if (BOSS == 1)
+				cout << "this is the end[west]" << endl;
 			if (worker1 == 1)
 				cout << "you hear faint clicking" << endl;
 			if (worker1 == 2)
@@ -81,13 +90,13 @@ int main() {
 				cout << "without the abliaty to see you walk to the lights, as you aproch the lights speed to you, you feel a sharp pain in you sides as you get thrown to the floor, eveything fades to black." << endl;
 				playerHP = 0;
 			}
-			if (answer == "south" && worker1 == 0)
+			else if (answer == "south" && worker1 == 0)
 				room = 6;
-			if (answer == "north" && worker1 == 1) {
+			else if (answer == "north" && worker1 == 1) {
 				room = 4;
 				worker1 = 2;
 			}
-			if (answer == "north" && worker1 == 0)
+			else if (answer == "north" && worker1 == 0)
 				room = 4;
 			break;
 		case 6:
@@ -422,10 +431,53 @@ int main() {
 			cout << "from the darkness an upsidown skull, two gleaming lights hover above, it watches you for a secent," << endl;
 
 			Dayeater();
+
+			cout << "with the dayeater fallen, you see a key just beneath the skull" << endl;
+			cout << "you take it" << endl;
+			inventory[9] = "lastkey";
+			cout << "a ladder at the back of the chamber leads back in[east]" << endl;
+			cin >> answer;
+
+			if (answer == "east")
+				room = 4;
+			break;
+		case 31:
+			cout << "you come to a large office, a desk sits at the back of the room[east, desk]" << endl;
+			cin >> answer;
+
+			if (answer == "east")
+				room = 3;
+			else if (answer == "desk" && inventory[9] != "lastkey")
+				cout << "a trapdoor lays underneath the desk, its locked, you don't have the key" << endl;
+			else if (answer == "desk" && inventory[9] == "lastkey") {
+				cout << "you unlock the trapdoor, just before you clime down to the exit, the computer screen blinks on." << endl;
+				cout << "it's on a blue screen, but red text is imposed over it" << endl;
+				cout << "NO HAPPY ENDINGS" << endl;
+				cout << "you press on to freedom" << endl;
+				win = 1;
+			}
 		}
-	}
-	cout << "GAME OVER" << endl;
-}
+		if (playerHP == 0) {
+			cout << "/----\\   /\\   |\\  /| |---     /---\\  \\    / |--- |---\\" << endl;
+			cout << "| ___   /__\\  | \\/ | |---     |    |  \\  /  |--- |___/ " << endl;
+			cout << "\\___|  /    \\ |    | |___     \\___/    \\/   |___ |\\   " << endl;
+			win = 0;
+			return 0;
+		}
+		if (win == 1) {
+			cout << "you leave, outside at last, the light hurts your eyes, but your free" << endl;
+			cout << endl << endl;
+			cout << "weeks have passed since you escaped, things got better, but you still hear the clicking, your doctor says it the trama from your time in there, but somthing feels diffrent" << endl;
+			cout << "later you started seeing things that were not there, the clicking got louder, the light hurt worse, so much worse" << endl;
+			cout << "then one day in the dark of your home, a sharp, extream pain shot though the back of your neck" << endl;
+			cout << "you colapse, try as you might your body doesent move, it doesent do anything" << endl;
+			cout << "what feels like days pass, but it's only been an hour" << endl;
+			cout << "then your body gets up, you scream for it to do anything, but it doesent lisen" << endl;
+			cout << "YOUR NOT IN CONTROL ANYMORE" << endl;
+			return 0;
+		}
+	} // game loop end
+}// main end
 //functions def
 void menu() {
 	cout << "_______________________________" << endl;
@@ -443,7 +495,7 @@ void menu() {
 		cout << "and your helth is " << playerHP << endl;
 	}
 	else if (answer == "backstory")
-		cout << "WIP" << endl;
+		cout << "NO" << endl;
 	else
 		cout << "returned" << endl << endl;
 	
@@ -469,8 +521,10 @@ void battle() {
 	int monsterHP = 0;
 	int monsterAP = 0;
 	int type = monster();
-	int playerAP;
+	int playerAP = 0;
 	
+	system("color 4F");
+
 	if (inventory[1] == "baton")
 		playerAP = rand() % 6 + 1;
 	else if (inventory[1] == "fist")
@@ -497,6 +551,7 @@ void battle() {
 			monsterAP = rand() % 5 + 1;
 		}
 	while (playerHP > 0 && monsterHP > 0) {// battle 
+		system("color 4F");
 		//player
 		cout << "your turn [attack, guard, heal]" << endl;
 		cin >> answer;
@@ -537,19 +592,27 @@ void battle() {
 			cout << "The soldier's claw slams right though you, it slams you agenst the floor untell your motionless" << endl;
 		if (monsterHP <= 0)
 			cout << "the constuct falls and dimantals, leaving the body of a vary large ant" << endl;
+
+		system("color 0F");
 	
 	}
 }
 void Dayeater() {
+	system("color 40");
+
 	int DayeaterHP = 100;
 	int DayeaterAP;
 	int DayeaterATTACK;
-	int playerAP;
+	int playerAP = 0;
 
 	cout << "the monster walks in to the light, unlike th others it is unfased" << endl;
 	cout << "it towers over you, even on all fours, it's front legs are masive and tipped in spikes insted of hands, bits of the Host's skelton pokes from it's dark gray \"skin\"," << endl;
 	cout << "THIS IS THE END, the dayeater stand ahead" << endl;
 
+	if (inventory[1] == "baton")
+		playerAP = rand() % 6 + 1;
+	else if (inventory[1] == "fist")
+		playerAP = rand() % 10 + 1;
 
 	while (playerHP > 0 && DayeaterHP > 0) {// battle 
 		//player
@@ -603,5 +666,7 @@ void Dayeater() {
 			cout << "the dayeater takes you to the groud, it blocks the light as it looms over you with it's front legs above, then brings them down" << endl;
 		if (DayeaterHP <= 0)
 			cout << "the dayeater colapses, it's armor broken, the light burning the ants away" << endl;
+
+		system("color 0F");
 	}
 }
